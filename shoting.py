@@ -1,5 +1,6 @@
 import math
 import matplotlib
+import matplotlib.pyplot as plt
 
 def shotingvertical(alfa,distance,targetheight):
     i=1
@@ -32,10 +33,11 @@ def shotingaglevertical(distance,targetheight):
     startagle=0;
     startwector=1/4*math.pi;
     scorelist=[]
-
+    pudło="trafiony"
+    wathdog=0
     while(1>onpoint):
         acturalshot=shotingvertical(startagle,distance,targetheight)
-
+        wathdog=wathdog+1
         if(acturalshot>lastshot):
             startagle=startagle+startwector
             lastshot = acturalshot
@@ -43,16 +45,30 @@ def shotingaglevertical(distance,targetheight):
             startwector=startwector*(-1/2)
             startagle = startagle+startwector
             lastshot = acturalshot
-        if(acturalshot==1):
+        if(0.99999<acturalshot<1.0001):
+            onpoint=2
+        if(wathdog>10000):
+            pudło="poza zasięiem"
             onpoint=2
         scorelist.append(acturalshot)
-    return startagle, acturalshot, scorelist
+    return startagle, acturalshot, scorelist, pudło
 
-x,lastshot,scorelist = shotingaglevertical(120,2)
-import matplotlib.pyplot as plt
+x,lastshot,scorelist, pudło = shotingaglevertical(780,2)
+def maxdisctance():
+    range=220
+    targeton= "trafiony"
+    while (targeton== "trafiony"):
+        x,lastshot,scorelist,pudło=shotingaglevertical(range,0)
+        targeton=pudło
+        range=range+1
+    return range
+max= maxdisctance()
 plt.plot(scorelist)
 plt.show()
 
-print (x)
 
+print (x)
+print (lastshot)
+print (pudło)
+print(max)
 
