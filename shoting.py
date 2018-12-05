@@ -48,9 +48,10 @@ def shotingaglevertical(distance,targetheight):
         scorelist.append(acturalshot)
     return startagle, acturalshot, scorelist
 
-x,lastshot,scorelist = shotingaglevertical(120,2)
+x,lastshot,scorelist = shotingaglevertical(180,2)
 import matplotlib.pyplot as plt
 plt.plot(scorelist)
+plt.grid()
 plt.show()
 
 print (x)
