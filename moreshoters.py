@@ -119,9 +119,29 @@ def csvgen(liczba):
 
 
     wynik = 'Wygenerowano następującą liczbę strzałów:'+ str(liczba)
-    genfile_writer.close()
+
     print(wynik)
     return wynik
+
+
+def gentab(iteracje):
+    licznik =0
+    kat = []
+    zasieg = []
+    while(licznik<iteracje):
+        alfa = 90 * np.random.random_sample()
+        beta = 0
+        targetheight = 0
+        airresistance = 0.2
+        windforce = [0, 0, 0]
+        v0 = 600
+
+        X, Y, Z = precision(alfa, beta, targetheight, airresistance, windforce, v0)
+        kat.append(alfa)
+        zasieg.append(X)
+        licznik = licznik +1
+
+    return kat, zasieg
 
 X,Y ,Z= precision(20,0.0,2,0.1,[1,0,0],1100)
 print(X,Y,Z)
