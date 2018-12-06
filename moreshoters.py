@@ -92,7 +92,7 @@ def precision(alfa ,beta,targetheight,airresistance,windforce,v0):
     return X,targetheight,Z
 
 def csvgen(liczba):
-    with open('genfile_file.csv', mode='w') as genfile_file:
+    with open('genfile_file2.csv', mode='w') as genfile_file:
         genfile_writer = csv.writer(genfile_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
 
@@ -102,8 +102,9 @@ def csvgen(liczba):
             iterator = iterator + 1
             try:
 
-                alfa = np.random.normal(45,45,1)
-                beta = np.random.normal(0,45,1)
+
+                alfa=90*np.random.random_sample()
+                beta=180*np.random.random_sample()-90
                 targetheight = 0
                 airresistance = 0.1
                 windforce = [0,0,0]
@@ -117,7 +118,7 @@ def csvgen(liczba):
                 iterator = iterator-1
 
 
-    wynik = 'Wygenerowano następującą liczbę strzałów:'+ str
+    wynik = 'Wygenerowano następującą liczbę strzałów:'+ str(liczba)
     genfile_writer.close()
     print(wynik)
     return wynik
@@ -134,7 +135,7 @@ X2 =X[X.__len__() - 2]
 Y2=Y[Y.__len__() - 2]
 Z2= Z[Z.__len__() - 2]
 print( X2,Y2,Z2)
-csvgen(10000)
+csvgen(1000)
 
 
 
