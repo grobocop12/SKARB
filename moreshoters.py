@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import sympy
 import pandas
 from pylab import *
+import csv
 
 def ss(alfa ,beta,targetheight,airresistance,windforce,v0):
     podniesienie= alfa * math.pi / 180
@@ -79,29 +80,65 @@ def score (a,b,h,r,w,v0,d):
 
 
     return Xscore, Zscore
-def shotingaglevertical2(distance,targetheight):
-    onpoint=0
-    lastshot =0;
-    acturalshot=0;
-    startagle=0.0001;
-    startwector=20;
-    scorelist=[]
-    pudlo="trafiony"
-    wathdog=0
-    while(1>onpoint):
-        acturalshot =
-        wathdog=wathdog+1
-        if(acturalshot>lastshot):
-            startagle=startagle+startwector
-            lastshot = acturalshot
-        if(acturalshot<lastshot):
-            startwector=startwector*(-2/5)
-            startagle = startagle+startwector
-            lastshot = acturalshot
-        if(0.999<acturalshot<1.001):
-            onpoint=2
-        if(wathdog>200):
-            pudlo="poza zasięiem"
-            onpoint=2
-        scorelist.append(acturalshot)
-    return startagle, acturalshot, scorelist, pudlo
+
+def precision(alfa ,beta,targetheight,airresistance,windforce,v0):
+    X_WD, Y_WD, Z_WD = ss(alfa ,beta,targetheight,airresistance,windforce,v0)
+    Y = (Y_WD[Y_WD.__len__() - 2] - targetheight) / ((Y_WD[Y_WD.__len__() - 2]-targetheight) + math.fabs((Y_WD[Y_WD.__len__() - 1])-targetheight))
+    Xdis=math.fabs(X_WD[X_WD.__len__() - 2] - X_WD[X_WD.__len__() - 1])
+    Zdis=math.fabs(Z_WD[Z_WD.__len__() - 2] - Z_WD[Z_WD.__len__() - 1])
+    X = Y * (Xdis) + X_WD[X_WD.__len__() - 2]
+
+    Z = Y * (Zdis) + Z_WD[Z_WD.__len__() - 2]
+    return X,targetheight,Z
+
+def csvgen(liczba):
+    with open('genfile_file.csv', mode='w') as genfile_file:
+        genfile_writer = csv.writer(genfile_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+
+
+
+        iterator=0
+        while(iterator<liczba):
+            iterator = iterator + 1
+            try:
+
+                alfa = np.random.normal(45,45,1)
+                beta = np.random.normal(0,45,1)
+                targetheight = 0
+                airresistance = 0.1
+                windforce = [0,0,0]
+                v0 = 1100
+
+
+                X,Y,Z = precision(alfa, beta, targetheight,airresistance , windforce, v0)
+
+                genfile_writer.writerow([alfa,beta,targetheight,airresistance,windforce,v0,X,Z])
+            except:
+                iterator = iterator-1
+
+
+    wynik = 'Wygenerowano następującą liczbę strzałów:'+ str
+    genfile_writer.close()
+    print(wynik)
+    return wynik
+
+X,Y ,Z= precision(20,0.0,2,0.1,[1,0,0],1100)
+print(X,Y,Z)
+X,Y,Z = ss(20,0.0,2,0.1,[1,0,0],1100)
+X1 =X[X.__len__() - 1]
+Y1=Y[Y.__len__() - 1]
+Z1= Z[Z.__len__() - 1]
+
+print( X1,Y1,Z1)
+X2 =X[X.__len__() - 2]
+Y2=Y[Y.__len__() - 2]
+Z2= Z[Z.__len__() - 2]
+print( X2,Y2,Z2)
+csvgen(10000)
+
+
+
+
+
+
+
