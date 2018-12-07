@@ -143,6 +143,7 @@ def gentab(iteracje):
 
     return kat, zasieg
 
+'''
 X,Y ,Z= precision(20,0.0,2,0.1,[1,0,0],1100)
 print(X,Y,Z)
 X,Y,Z = ss(20,0.0,2,0.1,[1,0,0],1100)
@@ -156,7 +157,7 @@ Y2=Y[Y.__len__() - 2]
 Z2= Z[Z.__len__() - 2]
 print( X2,Y2,Z2)
 csvgen(1000)
-
+'''
 
 
 
