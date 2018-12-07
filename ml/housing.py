@@ -35,10 +35,10 @@ print(housing.describe())
 
 
 import matplotlib.pyplot as plt
-'''
+
 housing.hist(bins = 50, figsize =(20,15))
 plt.show()
-'''
+
 
 #podzielenie danych na zbiór uczący i testowy
 
@@ -97,16 +97,16 @@ for set_ in (strat_train_set,strat_test_set):
 
 #print(strat_test_set.head())
 
-#
+
 housing = strat_train_set.copy()
 
 
 #wyświetlenie danych według szerokości i długości geo.
-#housing.plot(kind='scatter', x='longitude', y= 'latitude', alpha=0.4,
-#             s=housing['population']/100, label='population', figsize=(10,7),
-#             c= 'median_house_value',cmap=plt.get_cmap('jet'),colorbar = True)
-#plt.legend()
-#plt.show()
+housing.plot(kind='scatter', x='longitude', y= 'latitude', alpha=0.4,
+             s=housing['population']/100, label='population', figsize=(10,7),
+             c= 'median_house_value',cmap=plt.get_cmap('jet'),colorbar = True)
+plt.legend()
+plt.show()
 
 corr_matrix = housing.corr()
 print(corr_matrix['median_house_value'].sort_values(ascending = False))
@@ -118,9 +118,9 @@ attributes = ['median_house_value','median_income',
 
 # wykresy korelacji
 
-#scatter_matrix(housing[attributes],figsize=(12,8))
-#housing.plot(kind='scatter', x= 'median_income', y='median_house_value',
-#             alpha = 0.1)
+scatter_matrix(housing[attributes],figsize=(12,8))
+housing.plot(kind='scatter', x= 'median_income', y='median_house_value',
+             alpha = 0.1)
 #plt.show();
 
 housing['rooms_per_houselhold'] = housing['total_rooms']/housing['households']
@@ -282,6 +282,7 @@ print('Labels:', list(some_labels))
 
 #Decision tree
 
+'''
 from sklearn.tree import DecisionTreeRegressor
 
 tree_reg = DecisionTreeRegressor()
@@ -291,6 +292,8 @@ from sklearn.model_selection import cross_val_score
 scores = cross_val_score(tree_reg, housing_prepared, housing_labels,
                           scoring = 'neg_mean_squared_error', cv = 10)
 
+'''
+'''
 tree_rmse_scores = np.sqrt(-scores)
 
 def display_scores(scores):
@@ -300,18 +303,23 @@ def display_scores(scores):
     
 display_scores(tree_rmse_scores)
 print()
+'''
 
 # porównanie z modelem liniowym
-
+'''
 lin_scores = cross_val_score(lin_reg, housing_prepared, housing_labels,
                              scoring='neg_mean_squared_error', cv = 10)
 
 lin_rmse_scores = np.sqrt(-lin_scores)
 display_scores(lin_rmse_scores)
-
+'''
 #model RandomForest
-print()
+
 from sklearn.ensemble import RandomForestRegressor
+
+'''
+print()
+
 forest_reg = RandomForestRegressor()
 forest_reg.fit(housing_prepared, housing_labels)
 forest_scores = cross_val_score(forest_reg, housing_prepared, housing_labels,
@@ -319,3 +327,67 @@ forest_scores = cross_val_score(forest_reg, housing_prepared, housing_labels,
 
 forest_scores_rmse = np.sqrt(-forest_scores)
 display_scores(forest_scores_rmse)
+'''
+
+# selekcja nalepszych parametrów
+
+'''
+from sklearn.model_selection import GridSearchCV
+
+param_grid = [
+    {'n_estimators':[40,50], 'max_features':[ 8, 10, 15]},
+   # {'bootstrap':[False], 'n_estimators':[3, 10], 'max_features':[2, 3, 4]}
+]
+
+forest_reg = RandomForestRegressor()
+
+grid_search = GridSearchCV(forest_reg, param_grid, cv = 5,
+                           scoring = 'neg_mean_absolute_error')
+
+grid_search.fit(housing_prepared, housing_labels)
+'''
+'''
+cvres = grid_search.cv_results_
+for mean_score, params in zip(cvres['mean_test_score'],cvres['params']):
+    print(np.sqrt(-mean_score),params)
+'''
+# ostateczne #
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+from sklearn.svm import SVR
+
+#print(grid_search.best_estimator_)
+#final_model = SVR(kernel='linear',gamma='scale',C=2.0, epsilon=5)
+
+
+
+final_model = RandomForestRegressor(max_features=10,
+                                    n_estimators=300,
+                                    bootstrap=True,
+                                    random_state=0)
+
+X_test = strat_test_set.drop('median_house_value', axis= 1)
+Y_test = strat_test_set['median_house_value'].copy()
+
+X_test_prepared = full_pipeline.transform(X_test)
+
+final_model.fit(X_test_prepared,Y_test)
+
+final_predictions = final_model.predict(X_test_prepared)
+
+final_mse = mean_squared_error(Y_test, final_predictions)
+final_rmse = np.sqrt(final_mse)
+print(final_model)
+print(final_rmse)
+print(len(housing))
+print(mean_absolute_error(Y_test, final_predictions))
+print(type(final_model),type(Y_test))
+
+data = pd.DataFrame()
+data['Test values'] = Y_test
+data['Predicted values'] = final_predictions
+#plt.xcorr(final_predictions, Y_test)
+scatter_matrix(data)
+#plt.xlabel('Test values')
+#plt.ylabel('Predicted values')
+
+plt.show()
