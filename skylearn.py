@@ -22,6 +22,7 @@ def make_data():
     return X, Y
 
 np.random.seed(0)
+
 X, Y = moreshoters.gentab(100)
 
 from sklearn.model_selection import train_test_split
