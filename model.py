@@ -26,14 +26,14 @@ def split_train_test_by_id(data, test_ratio, id_column, hash = hashlib.md5):
     return data.loc[~in_test_set], data.loc[in_test_set]
 
 
-data = pd.read_csv('genfile_file4.csv', encoding= 'cp1250')
+data = pd.read_csv('genfile_file_seed145_winforcezx.csv', encoding= 'cp1250')
 data = data.dropna()
 
 print('Data sample')
 print(data.head())
 
-no_wind_data = data.drop('wektor wiatru',axis =1)
-train_set, test_set = train_test_split(no_wind_data, test_size=0.2, random_state = 2137)
+#no_wind_data = data.drop('wektor wiatru',axis =1)
+train_set, test_set = train_test_split(data, test_size=0.2, random_state = 2137)
 
 X_train = train_set.drop(['X','Z'],axis=1)
 Y_train = train_set[['X','Z']].copy()
@@ -46,7 +46,7 @@ print(len(Y_train))
 
 print(len(X_test))
 print(len(Y_test))
-
+labels = ('Test set','Predictions')
 #linear model
 
 lin_reg = LinearRegression()
@@ -55,7 +55,7 @@ lin_reg.fit(X_train,Y_train)
 predictions = lin_reg.predict(X_test)
 
 final_mse = mean_squared_error(Y_test, predictions)
-final_rmse = np.sqrt(final_mse)
+final_rmse = np.sqrt(final_mse)/len(X_test)
 
 print('Linear model')
 print('Mean squared error:',final_rmse)
@@ -72,14 +72,16 @@ plt.scatter(predictions[:,0],
             color ='red')
 plt.grid()
 plt.xlabel('X')
-plt.ylabel('Y')
+plt.ylabel('Z')
 plt.title('Linear model')
+plt.legend(labels)
 
 # model random forest
-random_forest = RandomForestRegressor(max_features=5,
+random_forest = RandomForestRegressor(max_features=8,
                                     n_estimators=100,
                                     bootstrap=True,
-                                    random_state=0)
+                                    random_state=0,
+                                    criterion='mae')
 
 random_forest.fit(X_train,Y_train)
 
@@ -87,7 +89,7 @@ predictions = random_forest.predict(X_test)
 
 
 final_mse = mean_squared_error(Y_test, predictions)
-final_rmse = np.sqrt(final_mse)
+final_rmse = np.sqrt(final_mse)/len(X_test)
 
 print('Random Forest model')
 print('Mean squared error:',final_rmse)
@@ -104,8 +106,15 @@ plt.scatter(predictions[:,0],
             color ='red')
 plt.grid()
 plt.xlabel('X')
-plt.ylabel('Y')
+plt.ylabel('Z')
 plt.title('Random Forest model')
+plt.legend(labels)
+
+
+#a = np.array([20,20,0,0.1,1,0,1,1100])
+#a = a.reshape(1,-1)
+#print(random_forest.predict(a))
+
 
 #Decission tree
 
@@ -117,7 +126,7 @@ predictions = decison_tree.predict(X_test)
 
 
 final_mse = mean_squared_error(Y_test, predictions)
-final_rmse = np.sqrt(final_mse)
+final_rmse = np.sqrt(final_mse)/len(X_test)
 
 print('Decision Tree Regressor model')
 print('Mean squared error:',final_rmse)
@@ -134,9 +143,9 @@ plt.scatter(predictions[:,0],
             color ='red')
 plt.grid()
 plt.xlabel('X')
-plt.ylabel('Y')
+plt.ylabel('Z')
 plt.title('Decision Tree Regressor')
-
+plt.legend(labels)
 plt.show()
 
 
