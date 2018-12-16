@@ -93,10 +93,10 @@ def precision(alfa ,beta,targetheight,airresistance,windforce,v0):
 
 def csvgen(liczba):
     print ('Start')
-    with open('genfile_file_seed145_winforcezx.csv', mode='w') as genfile_file:
+    with open('genfile_file_seed145_test.csv', mode='a+') as genfile_file:
         genfile_writer = csv.writer(genfile_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
-        genfile_writer.writerow(['kąt podniesienia', 'kat boczny', 'wysokosc celu', 'opor powietrza', 'wiatr z', 'wiatr y', 'wiatr z' ,'wylotowa', 'X', 'Z'])
+        genfile_writer.writerow(['kat podniesienia', 'kat boczny', 'wysokosc celu', 'opor powietrza', 'wiatr x', 'wiatr y', 'wiatr z' ,'wylotowa', 'X', 'Z'])
         sed =seed(145)
         np.random.seed(145)
         iterator=0
@@ -105,9 +105,9 @@ def csvgen(liczba):
 
             alfa=90*np.random.random_sample()
             beta=180*np.random.random_sample()-90
-            targetheight = 0
-            airresistance = 0.1
-            windforce = [np.random.random_sample(),0,np.random.random_sample()]
+            targetheight = 2*np.random.random_sample()
+            airresistance = 0.1*2*np.random.random_sample()
+            windforce = [2*np.random.random_sample()-1,2*np.random.random_sample()-1,2*np.random.random_sample()-1]
             v0 = 1100
             winx = windforce[0]  # wiatr równoległy
             winy = windforce[1]  # wiatr wznoszący
@@ -130,7 +130,7 @@ def csvgen2(liczba):
         genfile_writer = csv.writer(genfile_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
         genfile_writer.writerow(
-            ['kąt podniesienia', 'kat boczny', 'wysokosc celu', 'opor powietrza', 'wiatr z', 'wiatr y', 'wiatr z','wylotowa', 'X', 'Z'])
+            ['kąt podniesienia', 'kat boczny', 'wysokosc celu', 'opor powietrza', 'wiatr x', 'wiatr y', 'wiatr z','wylotowa', 'X', 'Z'])
         sed = seed(145)
         iterator = 0
         np.random.seed(145)
@@ -163,7 +163,7 @@ def csvgen3(liczba):
         genfile_writer = csv.writer(genfile_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
         genfile_writer.writerow(
-            ['kąt podniesienia', 'kat boczny', 'wysokosc celu', 'opor powietrza', 'wiatr z', 'wiatr y', 'wiatr z',
+            ['kąt podniesienia', 'kat boczny', 'wysokosc celu', 'opor powietrza', 'wiatr X', 'wiatr y', 'wiatr z',
              'wylotowa', 'X', 'Z'])
         sed = seed(145)
         np.random.seed(145)
@@ -236,5 +236,9 @@ g = csvgen3(10000)
 
 
 
-
-
+'''
+X20, h20, Z20 = precision(20 ,20,0,0.1,[1,0,1],1100)
+print(X20)
+print(Z20)
+'''
+z = csvgen(10)
