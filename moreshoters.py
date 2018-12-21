@@ -93,7 +93,7 @@ def precision(alfa ,beta,targetheight,airresistance,windforce,v0):
 
 def csvgen(liczba):
     print ('Start')
-    with open('genfile_file_seed145_winforcezyx_big.csv', mode='a+') as genfile_file:
+    with open('genfile_file_seed145_winforcezyx_big_21_12_2018.csv', mode='a+') as genfile_file:
         genfile_writer = csv.writer(genfile_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
         genfile_writer.writerow(['kat podniesienia', 'kat boczny', 'wysokosc celu', 'opor powietrza', 'wiatr x', 'wiatr y', 'wiatr z' ,'wylotowa', 'X', 'Z'])
@@ -107,7 +107,7 @@ def csvgen(liczba):
             beta=180*np.random.random_sample()-90
             targetheight = 2
             airresistance = 0.1
-            windforce = [np.random.random_sample()-0.5,0,np.random.random_sample()-0.5]
+            windforce = [np.random.random_sample()-0.5,0.5*np.random.random_sample(),np.random.random_sample()-0.5]
             v0 = 1100
             winx = windforce[0]  # wiatr równoległy
             winy = windforce[1]  # wiatr wznoszący
@@ -115,9 +115,14 @@ def csvgen(liczba):
 
             X,Y,Z = precision(alfa, beta, targetheight,airresistance , windforce, v0)
 
+            if(X and Y and Z <500000):
+                genfile_writer.writerow([alfa,beta,targetheight,airresistance,winx,winy,winz,v0,X,Z])
+                print(iterator)
+            else:
+                print("Error data")
+                iterator-1
 
-            genfile_writer.writerow([alfa,beta,targetheight,airresistance,winx,winy,winz,v0,X,Z])
-            print(iterator)
+
         wynik = 'Wygenerowano następującą liczbę strzałów:'+ str(liczba)
 
         print(wynik)
@@ -241,4 +246,4 @@ X20, h20, Z20 = precision(20 ,20,0,0.1,[1,0,1],1100)
 print(X20)
 print(Z20)
 '''
-z = csvgen(50000)
+'''z = csvgen(50000)'''

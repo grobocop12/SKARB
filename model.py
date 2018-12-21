@@ -85,8 +85,8 @@ random_forest = RandomForestRegressor(max_features=8,
 
 random_forest.fit(X_train,Y_train)
 
-predictions = random_forest.predict(X_test)
 
+predictions = random_forest.predict(X_test)
 
 final_mse = mean_squared_error(Y_test, predictions)
 final_rmse = np.sqrt(final_mse)/len(X_test)
