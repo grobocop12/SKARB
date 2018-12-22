@@ -35,7 +35,7 @@ def split_train_test_by_id(data, test_ratio, id_column, hash = hashlib.md5):
 labels = ('Test set','Predictions')
 
 
-data = pd.read_csv('genfile_file_seed145_winforcezyx_big.csv', encoding= 'cp1250')
+data = pd.read_csv('genfile_file_seed145_winforcezyx_big_21_12_2018.csv', encoding= 'cp1250')
 data = data.dropna()
 #data = imp.fit_transform(data)
 

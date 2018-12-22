@@ -4,6 +4,7 @@ import numpy as np
 import hashlib
 import moreshoters
 import moreshoters
+import datetime
 
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
@@ -13,15 +14,16 @@ from sklearn.tree import DecisionTreeRegressor
 
 
 def singleshot(Xtarget,Ztarget,windforce,data):
+    print(datetime.datetime.now())
     print('Start')
     data = pd.read_csv(data, encoding= 'cp1250')
     data = data.dropna()
-
+    print('Data loaded')
     train_set, test_set = train_test_split(data, test_size=0.2, random_state = 2137)
 
     X_train = train_set.drop(['kat podniesienia','kat boczny'],axis=1)
     Y_train = train_set[['kat podniesienia','kat boczny']].copy()
-
+    print('Neural fit')
     random_forest = RandomForestRegressor(max_features=8,
                                     n_estimators=100,
                                     bootstrap=True,
@@ -33,10 +35,13 @@ def singleshot(Xtarget,Ztarget,windforce,data):
     winx = windforce[0]  # wiatr równoległy
     winy = windforce[1]  # wiatr wznoszący
     winz = windforce[2]
+    print('Data predist')
     predictions = random_forest.predict(2,0.1,winx,winy,winz,1100,Xtarget,Ztarget)
     alfa = predictions[0]
     beta = predictions[1]
+    print('Shot')
     X, Y, Z = moreshoters.precision(alfa, beta,2, 0.1, windforce, 1100)
+    print('Drawning...')
     plt.figure(1)
     plt.scatter(Xtarget,
                 Ztarget,

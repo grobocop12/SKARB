@@ -115,7 +115,7 @@ def csvgen(liczba):
 
             X,Y,Z = precision(alfa, beta, targetheight,airresistance , windforce, v0)
 
-            if(X and Y and Z <500000):
+            if(X or Y or Z <500000):
                 genfile_writer.writerow([alfa,beta,targetheight,airresistance,winx,winy,winz,v0,X,Z])
                 print(iterator)
             else:
