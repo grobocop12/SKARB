@@ -1,1 +1,0 @@
-Samouczący się KAlkulatoR Balistryczny 
